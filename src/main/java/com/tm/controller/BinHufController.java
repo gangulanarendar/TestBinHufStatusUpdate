@@ -1,7 +1,9 @@
 package com.tm.controller;
 
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,10 +27,18 @@ public class BinHufController {
 
     @Autowired
     Job job;
+    
+   
 
-    @RequestMapping("/jobLauncher.html")
-    public void handle() throws Exception{
-        jobLauncher.run(job, new JobParameters());
+    @RequestMapping("/runjob")
+    public String handle() throws Exception{
+    	 JobParameters jobParameters = 
+    	  		  new JobParametersBuilder()
+    	  		  .addLong("time",System.currentTimeMillis()).toJobParameters();
+    	  			
+    	JobExecution execution = jobLauncher.run(job, jobParameters);
+    	return execution.getStatus().toString();
+    	
     }
 	
 	@RequestMapping("/getit")
